@@ -9,18 +9,39 @@
     <title>2FAGO 验证码</title>
     <style>
       :root {
+        color-scheme: dark;
         --bg: #09090b;
-        --bg-soft: #111114;
-        --panel: rgba(13, 13, 16, 0.88);
-        --panel-2: rgba(19, 19, 24, 0.94);
-        --line: rgba(255, 255, 255, 0.09);
+        --bg-glow-a: rgba(84, 196, 144, 0.15);
+        --bg-glow-b: rgba(76, 170, 255, 0.12);
+        --panel: rgba(17, 19, 24, 0.88);
+        --panel-strong: rgba(13, 14, 18, 0.94);
+        --panel-soft: rgba(255, 255, 255, 0.03);
+        --line: rgba(255, 255, 255, 0.08);
         --line-strong: rgba(255, 255, 255, 0.14);
-        --text: #f5f7fa;
-        --muted: #8c93a1;
-        --accent: #87f0ba;
-        --accent-2: #63d8ff;
+        --text: #f4f7fb;
+        --muted: #9298a6;
+        --accent: #86efbe;
+        --accent-2: #60d6ff;
         --danger: #ff7d7d;
-        --shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
+        --shadow: 0 28px 90px rgba(0, 0, 0, 0.42);
+      }
+
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: #f4f7fb;
+        --bg-glow-a: rgba(92, 190, 142, 0.16);
+        --bg-glow-b: rgba(79, 149, 255, 0.14);
+        --panel: rgba(255, 255, 255, 0.84);
+        --panel-strong: rgba(255, 255, 255, 0.94);
+        --panel-soft: rgba(20, 27, 44, 0.04);
+        --line: rgba(18, 28, 45, 0.09);
+        --line-strong: rgba(18, 28, 45, 0.15);
+        --text: #111827;
+        --muted: #667085;
+        --accent: #1ea672;
+        --accent-2: #2388ff;
+        --danger: #d84545;
+        --shadow: 0 28px 70px rgba(114, 132, 167, 0.18);
       }
 
       * {
@@ -35,16 +56,14 @@
 
       body {
         min-height: 100vh;
-        padding: 20px;
+        padding: 18px;
         color: var(--text);
         font-family: "Satoshi", "Avenir Next", "Segoe UI", "PingFang SC",
           "Noto Sans SC", sans-serif;
         background:
-          radial-gradient(circle at top, rgba(99, 216, 255, 0.16), transparent 30%),
-          radial-gradient(circle at 80% 20%, rgba(135, 240, 186, 0.14), transparent 24%),
-          linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 30%),
+          radial-gradient(circle at top left, var(--bg-glow-a), transparent 28%),
+          radial-gradient(circle at top right, var(--bg-glow-b), transparent 26%),
           var(--bg);
-        overflow-x: hidden;
       }
 
       body::before {
@@ -52,14 +71,17 @@
         position: fixed;
         inset: 0;
         background-image:
-          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-        background-size: 40px 40px;
-        mask-image: radial-gradient(circle at center, black 38%, transparent 82%);
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 38px 38px;
+        opacity: 0.45;
+        mask-image: radial-gradient(circle at center, black 42%, transparent 88%);
         pointer-events: none;
       }
 
       .shell {
+        position: relative;
+        z-index: 1;
         width: min(100%, 1180px);
         margin: 0 auto;
       }
@@ -69,12 +91,12 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        padding: 14px 16px;
+        padding: 12px 14px;
         border: 1px solid var(--line);
-        border-radius: 18px;
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(12px);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+        border-radius: 22px;
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
       }
 
       .brand {
@@ -85,28 +107,21 @@
       }
 
       .brand-mark {
-        width: 34px;
-        height: 34px;
+        width: 38px;
+        height: 38px;
         display: grid;
         place-items: center;
-        border-radius: 12px;
+        border-radius: 14px;
         border: 1px solid var(--line);
-        background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
-          var(--panel-2);
-        font-size: 13px;
+        background: var(--panel-soft);
+        font-size: 14px;
         font-weight: 700;
-        letter-spacing: 0.08em;
-      }
-
-      .brand-copy {
-        min-width: 0;
       }
 
       .brand-copy strong {
         display: block;
-        font-size: 14px;
-        font-weight: 650;
+        font-size: 15px;
+        font-weight: 700;
       }
 
       .brand-copy span {
@@ -114,112 +129,54 @@
         margin-top: 2px;
         color: var(--muted);
         font-size: 12px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
 
-      .search-chip {
+      .theme-toggle {
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         padding: 10px 14px;
         border: 1px solid var(--line);
-        border-radius: 14px;
-        color: var(--muted);
-        background: rgba(255, 255, 255, 0.03);
-        font-size: 13px;
-        white-space: nowrap;
-      }
-
-      .layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
-        gap: 18px;
-        margin-top: 18px;
-      }
-
-      .card {
-        position: relative;
-        border: 1px solid var(--line);
-        border-radius: 28px;
-        background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 24%),
-          var(--panel);
-        backdrop-filter: blur(18px);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-      }
-
-      .card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background:
-          radial-gradient(circle at top right, rgba(99, 216, 255, 0.08), transparent 28%),
-          radial-gradient(circle at left center, rgba(135, 240, 186, 0.08), transparent 24%);
-        pointer-events: none;
-      }
-
-      .hero {
-        padding: 28px;
-      }
-
-      .hero-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 9px 12px;
         border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.04);
-        font-size: 12px;
-        color: var(--muted);
+        background: var(--panel-soft);
+        color: var(--text);
+        font: inherit;
+        cursor: pointer;
       }
 
-      .tag strong {
-        color: var(--text);
+      .theme-icon {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 14px;
+      }
+
+      .theme-label {
+        font-size: 13px;
         font-weight: 600;
       }
 
-      .hero-title {
-        margin: 18px 0 12px;
-        max-width: 10ch;
-        font-size: clamp(40px, 7vw, 82px);
-        line-height: 0.92;
-        letter-spacing: -0.05em;
+      .workspace {
+        display: grid;
+        grid-template-columns: minmax(340px, 470px) minmax(0, 1fr);
+        gap: 18px;
+        margin-top: 18px;
+        align-items: start;
       }
 
-      .hero-copy {
-        margin: 0;
-        max-width: 600px;
-        color: var(--muted);
-        font-size: 15px;
-        line-height: 1.7;
-      }
-
-      .otp-wrap {
-        margin-top: 24px;
-        padding: 22px;
-        border-radius: 24px;
+      .panel {
         border: 1px solid var(--line);
-        background:
-          linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 26%),
-          rgba(255, 255, 255, 0.025);
+        border-radius: 30px;
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        box-shadow: var(--shadow);
       }
 
-      .otp-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 18px;
+      .otp-panel {
+        padding: 24px;
       }
 
       .eyebrow {
@@ -230,27 +187,18 @@
         text-transform: uppercase;
       }
 
-      .live-dot {
-        width: 9px;
-        height: 9px;
-        border-radius: 999px;
-        background: var(--accent);
-        box-shadow: 0 0 0 6px rgba(135, 240, 186, 0.12);
-      }
-
       .otp-code {
-        margin: 0;
-        font-size: clamp(52px, 10vw, 108px);
-        line-height: 0.92;
-        letter-spacing: 0.1em;
-        font-weight: 700;
-        color: var(--text);
+        margin: 18px 0 0;
+        font-size: clamp(60px, 10vw, 112px);
+        line-height: 0.9;
+        letter-spacing: 0.08em;
+        font-weight: 800;
         font-variant-numeric: tabular-nums;
-        text-shadow: 0 0 28px rgba(135, 240, 186, 0.18);
+        text-shadow: 0 0 28px rgba(134, 239, 190, 0.16);
       }
 
       .status {
-        margin: 14px 0 0;
+        margin: 16px 0 0;
         color: var(--muted);
         font-size: 15px;
         line-height: 1.6;
@@ -265,7 +213,7 @@
         margin-top: 18px;
         overflow: hidden;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.06);
+        background: var(--panel-soft);
       }
 
       .progress-bar {
@@ -287,77 +235,137 @@
         padding: 16px;
         border: 1px solid var(--line);
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.03);
+        background: var(--panel-soft);
       }
 
       .stat span {
         display: block;
         margin-bottom: 8px;
-        font-size: 12px;
         color: var(--muted);
+        font-size: 12px;
       }
 
       .stat strong {
         display: block;
-        font-size: 20px;
-        font-weight: 650;
+        font-size: 22px;
+        font-weight: 700;
       }
 
       .side {
-        padding: 22px;
         display: grid;
-        gap: 14px;
-        align-content: start;
+        gap: 18px;
       }
 
-      .side-card {
-        padding: 18px;
-        border: 1px solid var(--line);
-        border-radius: 20px;
-        background: rgba(255, 255, 255, 0.03);
+      .stack {
+        display: grid;
+        gap: 18px;
       }
 
-      .side-card h2 {
-        margin: 0 0 10px;
-        font-size: 15px;
+      .input-panel {
+        padding: 24px;
       }
 
-      .side-card p {
+      .input-panel h1 {
         margin: 0;
+        font-size: clamp(30px, 5vw, 48px);
+        line-height: 1;
+        letter-spacing: -0.04em;
+      }
+
+      .input-panel p {
+        margin: 12px 0 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+
+      .secret-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .secret-input {
+        width: 100%;
+        min-width: 0;
+        padding: 15px 16px;
+        border: 1px solid var(--line-strong);
+        border-radius: 18px;
+        outline: none;
+        background: var(--panel-soft);
+        color: var(--text);
+        font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
+        font-size: 14px;
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
+      }
+
+      .secret-input::placeholder {
+        color: var(--muted);
+      }
+
+      .secret-input:focus {
+        border-color: rgba(134, 239, 190, 0.45);
+        box-shadow: 0 0 0 4px rgba(134, 239, 190, 0.12);
+      }
+
+      .action-button {
+        padding: 15px 18px;
+        border: 0;
+        border-radius: 18px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #06110d;
+        font: inherit;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .meta-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .mini-card {
+        padding: 20px;
+      }
+
+      .mini-card h2 {
+        margin: 0;
+        font-size: 16px;
+      }
+
+      .mini-card p {
+        margin: 10px 0 0;
         color: var(--muted);
         font-size: 14px;
         line-height: 1.7;
       }
 
-      .secret {
-        margin-top: 12px;
-        padding: 12px 14px;
-        border-radius: 16px;
-        border: 1px solid var(--line-strong);
-        background: rgba(255, 255, 255, 0.04);
-        font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
-        font-size: 13px;
-        word-break: break-all;
-      }
-
       .path {
         display: inline-block;
-        margin-top: 10px;
-        padding: 8px 10px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.04);
+        margin-top: 14px;
+        padding: 10px 12px;
+        border-radius: 14px;
+        background: var(--panel-soft);
+        border: 1px solid var(--line);
         color: var(--text);
         font-family: "SFMono-Regular", "Menlo", "Monaco", monospace;
         font-size: 12px;
+        word-break: break-all;
       }
 
-      @media (max-width: 920px) {
-        .layout {
+      @media (max-width: 980px) {
+        .workspace {
           grid-template-columns: 1fr;
         }
       }
 
-      @media (max-width: 640px) {
+      @media (max-width: 720px) {
         body {
           padding: 14px;
         }
@@ -366,21 +374,14 @@
           padding: 12px;
         }
 
-        .search-chip {
+        .brand-copy span {
           display: none;
         }
 
-        .hero,
-        .side {
-          padding: 18px;
-        }
-
+        .secret-form,
+        .meta-grid,
         .stats {
           grid-template-columns: 1fr;
-        }
-
-        .otp-wrap {
-          padding: 18px;
         }
       }
     </style>
@@ -392,91 +393,92 @@
           <div class="brand-mark">2F</div>
           <div class="brand-copy">
             <strong>2FAGO / TOTP Viewer</strong>
-            <span>路径里放密钥，页面直接输出当前验证码</span>
+            <span>输入密钥或直接打开密钥地址，页面会实时显示验证码</span>
           </div>
         </div>
-        <div class="search-chip">Search <strong style="color: var(--text)">K</strong></div>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深浅色">
+          <span class="theme-icon" id="theme-icon">☾</span>
+          <span class="theme-label" id="theme-label">深色</span>
+        </button>
       </header>
 
-      <section class="layout">
-        <main class="card hero">
-          <div class="hero-tags">
-            <div class="tag"><strong>Live</strong> 每 30 秒刷新</div>
-            <div class="tag"><strong>Path Mode</strong> `/2fago/SECRET`</div>
+      <main class="workspace">
+        <section class="panel otp-panel">
+          <p class="eyebrow">Current Verification Code</p>
+          <h1 class="otp-code" id="otp-code">------</h1>
+          <p class="status" id="status-text">请在右侧输入密钥，或把密钥放在地址最后直接打开。</p>
+          <div class="progress" aria-hidden="true">
+            <div class="progress-bar" id="progress-bar"></div>
           </div>
-
-          <h1 class="hero-title">Open Secret, Get Code.</h1>
-          <p class="hero-copy">
-            界面按 21st.dev 的深色组件感来处理，真正的 TOTP 逻辑仍然在浏览器本地运行，不需要后端参与。
-          </p>
-
-          <section class="otp-wrap">
-            <div class="otp-head">
-              <p class="eyebrow">Current Verification Code</p>
-              <div class="live-dot" aria-hidden="true"></div>
+          <div class="stats">
+            <div class="stat">
+              <span>剩余时间</span>
+              <strong id="seconds-left">--s</strong>
             </div>
-            <h2 class="otp-code" id="otp-code">------</h2>
-            <p class="status" id="status-text">正在读取链接中的密钥...</p>
-            <div class="progress" aria-hidden="true">
-              <div class="progress-bar" id="progress-bar"></div>
+            <div class="stat">
+              <span>周期</span>
+              <strong>30s</strong>
             </div>
-            <div class="stats">
-              <div class="stat">
-                <span>剩余时间</span>
-                <strong id="seconds-left">--s</strong>
-              </div>
-              <div class="stat">
-                <span>周期</span>
-                <strong>30s</strong>
-              </div>
-              <div class="stat">
-                <span>算法</span>
-                <strong>SHA-1</strong>
-              </div>
+            <div class="stat">
+              <span>算法</span>
+              <strong>SHA-1</strong>
             </div>
-          </section>
-        </main>
+          </div>
+        </section>
 
-        <aside class="card side">
-          <section class="side-card">
-            <h2>当前路径</h2>
-            <p>页面会优先读取地址中的密钥；如果你传了 `?secret=`，也会兼容。</p>
-            <div class="path" id="current-path">/2fago/</div>
+        <section class="side">
+          <section class="panel input-panel">
+            <h1>输入密钥，直接跳转</h1>
+            <p>输入 Base32 密钥后，当前页面会打开这个密钥对应的地址，并立即显示新的验证码。</p>
+            <form class="secret-form" id="secret-form">
+              <input
+                class="secret-input"
+                id="secret-input"
+                type="text"
+                inputmode="latin"
+                autocomplete="off"
+                autocapitalize="characters"
+                spellcheck="false"
+                placeholder="输入 Base32 密钥"
+              />
+              <button class="action-button" type="submit">打开地址</button>
+            </form>
+            <div class="path" id="target-url"></div>
           </section>
 
-          <section class="side-card">
-            <h2>密钥预览</h2>
-            <p>这里只显示脱敏后的内容，方便确认你打开的是哪一个密钥。</p>
-            <div class="secret" id="secret-preview">等待读取</div>
-          </section>
+          <section class="meta-grid">
+            <section class="panel mini-card">
+              <h2>使用方式</h2>
+              <p>你也可以直接把密钥写进地址栏，页面会自动读取并生成验证码。</p>
+              <div class="path" id="example-url"></div>
+            </section>
 
-          <section class="side-card">
-            <h2>使用方式</h2>
-            <p>
-              直接访问下面这种地址就行：
-              <span class="path" id="example-url"></span>
-            </p>
+            <section class="panel mini-card">
+              <h2>安全提醒</h2>
+              <p>密钥在 URL 中时，拿到这个链接的人都能看到同样的验证码，请只在可信环境里使用。</p>
+            </section>
           </section>
-
-          <section class="side-card">
-            <h2>安全提醒</h2>
-            <p>密钥出现在 URL 里就等于共享出去了，任何拿到链接的人都能生成同样的验证码。</p>
-          </section>
-        </aside>
-      </section>
+        </section>
+      </main>
     </div>
 
     <script>
       const PERIOD = 30;
       const DIGITS = 6;
       const BASE32_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+      const THEME_STORAGE_KEY = "2fago-theme";
+
       const codeEl = document.getElementById("otp-code");
       const statusEl = document.getElementById("status-text");
       const secondsEl = document.getElementById("seconds-left");
       const progressEl = document.getElementById("progress-bar");
       const exampleEl = document.getElementById("example-url");
-      const pathEl = document.getElementById("current-path");
-      const secretPreviewEl = document.getElementById("secret-preview");
+      const secretFormEl = document.getElementById("secret-form");
+      const secretInputEl = document.getElementById("secret-input");
+      const targetUrlEl = document.getElementById("target-url");
+      const themeToggleEl = document.getElementById("theme-toggle");
+      const themeIconEl = document.getElementById("theme-icon");
+      const themeLabelEl = document.getElementById("theme-label");
 
       let currentSecret = "";
       let lastCounter = -1;
@@ -504,16 +506,15 @@
         return secret.toUpperCase().replace(/[\s-]+/g, "").replace(/=+$/g, "");
       }
 
-      function maskSecret(secret) {
-        if (!secret) {
-          return "等待读取";
-        }
+      function getRoutingBase() {
+        const parts = window.location.pathname.split("/").filter(Boolean);
+        return parts[0]?.toLowerCase() === "2fago" ? "/2fago/" : "/";
+      }
 
-        if (secret.length <= 8) {
-          return secret;
-        }
-
-        return secret.slice(0, 4) + " •••• " + secret.slice(-4);
+      function buildSecretUrl(secret) {
+        const normalized = normalizeSecret(secret);
+        const base = getRoutingBase();
+        return window.location.origin + (normalized ? base + encodeURIComponent(normalized) : base);
       }
 
       function decodeBase32(secret) {
@@ -537,6 +538,24 @@
 
       function formatCode(code) {
         return code.replace(/(\d{3})(\d{3})/, "$1 $2");
+      }
+
+      function setTheme(theme) {
+        document.documentElement.dataset.theme = theme;
+        themeIconEl.textContent = theme === "light" ? "☀" : "☾";
+        themeLabelEl.textContent = theme === "light" ? "浅色" : "深色";
+        window.localStorage.setItem(THEME_STORAGE_KEY, theme);
+      }
+
+      function initTheme() {
+        const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
+        if (stored === "light" || stored === "dark") {
+          setTheme(stored);
+          return;
+        }
+
+        const prefersLight = window.matchMedia?.("(prefers-color-scheme: light)")?.matches;
+        setTheme(prefersLight ? "light" : "dark");
       }
 
       async function generateTotp(secret, timestampMs) {
@@ -577,6 +596,10 @@
         return String(binary % 10 ** DIGITS).padStart(DIGITS, "0");
       }
 
+      function updateTargetUrlPreview() {
+        targetUrlEl.textContent = buildSecretUrl(secretInputEl.value || currentSecret);
+      }
+
       async function render() {
         currentSecret = normalizeSecret(extractSecret());
 
@@ -588,13 +611,17 @@
 
         secondsEl.textContent = secondsLeft + "s";
         progressEl.style.width = progress + "%";
-        exampleEl.textContent = window.location.origin + "/2fago/JBSWY3DPEHPK3PXP";
-        pathEl.textContent = window.location.pathname + window.location.search;
-        secretPreviewEl.textContent = maskSecret(currentSecret);
+        exampleEl.textContent = buildSecretUrl("JBSWY3DPEHPK3PXP");
+
+        if (document.activeElement !== secretInputEl) {
+          secretInputEl.value = currentSecret;
+        }
+
+        updateTargetUrlPreview();
 
         if (!currentSecret) {
           codeEl.textContent = "------";
-          statusEl.textContent = "请把密钥放在地址最后，例如 /2fago/你的密钥";
+          statusEl.textContent = "请在右侧输入密钥，或把密钥放在地址最后直接打开。";
           statusEl.classList.remove("error");
           lastCounter = -1;
           return;
@@ -618,6 +645,28 @@
         }
       }
 
+      secretInputEl.addEventListener("input", updateTargetUrlPreview);
+      secretFormEl.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const normalized = normalizeSecret(secretInputEl.value);
+
+        if (!normalized) {
+          statusEl.textContent = "请先输入 Base32 密钥。";
+          statusEl.classList.add("error");
+          secretInputEl.focus();
+          updateTargetUrlPreview();
+          return;
+        }
+
+        window.location.href = buildSecretUrl(normalized);
+      });
+
+      themeToggleEl.addEventListener("click", () => {
+        const nextTheme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+        setTheme(nextTheme);
+      });
+
+      initTheme();
       render();
       setInterval(render, 1000);
     </script>
