@@ -40,11 +40,8 @@ export default function MainContent({
         <div className="space-y-2">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">
             <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-            Active Session
+            当前会话
           </span>
-          <h2 className="text-on-surface-variant font-medium">
-            Dynamic Verification Code
-          </h2>
         </div>
 
         <div className="relative h-32 flex items-center justify-center">
@@ -55,7 +52,7 @@ export default function MainContent({
               animate={{opacity: 1, y: 0}}
               exit={{opacity: 0, y: -20}}
               transition={{duration: 0.3}}
-              className="text-[5rem] md:text-[7rem] font-headline font-extrabold tracking-tighter text-on-surface leading-none select-all cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0"
+              className="text-[5rem] md:text-[7rem] font-headline font-extrabold tracking-[0.04em] text-on-surface leading-none select-all cursor-pointer hover:text-primary transition-colors bg-transparent border-0 p-0"
               onClick={onCodeClick}
               type="button"
             >
@@ -69,10 +66,10 @@ export default function MainContent({
         <div className="w-full max-w-md space-y-3">
           <div className="flex justify-between items-end">
             <span className="text-xs font-bold font-headline uppercase tracking-widest text-on-surface-variant">
-              Generation Cycle
+              刷新周期
             </span>
             <span className="text-sm font-semibold text-primary font-headline">
-              {timeLeft}s remaining
+              剩余 {timeLeft}s
             </span>
           </div>
           <div className="h-2 w-full bg-surface-container-high rounded-full overflow-hidden">
@@ -111,7 +108,7 @@ export default function MainContent({
             <History size={24} />
           </div>
           <div>
-            <h4 className="font-bold text-on-surface">Local TOTP Engine</h4>
+            <h4 className="font-bold text-on-surface">本地 TOTP 引擎</h4>
             <p className="text-sm text-on-surface-variant">
               验证码完全在浏览器本地生成，沿用我们原来的 Base32 + TOTP 逻辑。
             </p>

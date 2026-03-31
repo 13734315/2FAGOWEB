@@ -22,9 +22,6 @@ export default function Sidebar({
         <h3 className="font-headline font-bold text-on-surface mb-4">输入密钥打开</h3>
         <form className="space-y-4" onSubmit={onSubmit} id="secret-form">
           <div>
-            <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">
-              Base32 Secret Key
-            </label>
             <input
               className="w-full bg-surface-container-high border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/40 transition-all font-mono text-on-surface outline-none"
               placeholder="JBSWY3DPEHPK3PXP"
@@ -44,9 +41,6 @@ export default function Sidebar({
           </button>
         </form>
         <div className="mt-6 pt-6 border-t border-outline-variant/10">
-          <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">
-            Current Context URL
-          </label>
           <div className="bg-surface-container-low p-3 rounded-lg flex items-center gap-2 overflow-hidden">
             <Globe size={14} className="text-outline-variant shrink-0" />
             <code className="text-[10px] text-on-surface-variant truncate" id="target-url">
@@ -86,7 +80,7 @@ export default function Sidebar({
         </ul>
         <div className="mt-6 pt-6 border-t border-outline-variant/10">
           <label className="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-2">
-            Example URL
+            示例链接
           </label>
           <div className="bg-surface-container-low p-3 rounded-lg flex items-center gap-2 overflow-hidden">
             <Globe size={14} className="text-outline-variant shrink-0" />
