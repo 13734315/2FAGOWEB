@@ -1,5 +1,5 @@
 import React from 'react';
-import {Copy, Link as LinkIcon} from 'lucide-react';
+import {Copy, History, Link as LinkIcon, ShieldCheck} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 
 type MainContentProps = {
@@ -35,7 +35,7 @@ export default function MainContent({
         : 'text-sm md:text-base text-on-surface-variant';
 
   return (
-    <section className="flex-1">
+    <section className="flex-1 space-y-8">
       <div className="bg-surface-container-lowest rounded-xl p-10 lg:p-16 flex flex-col items-center justify-center text-center space-y-10 shadow-sm border border-outline-variant/5">
         <div className="relative h-32 flex items-center justify-center">
           <AnimatePresence mode="wait">
@@ -92,6 +92,31 @@ export default function MainContent({
             <Copy size={20} className="group-hover:scale-110 transition-transform" />
             {copyCodeLabel}
           </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="bg-surface-container-low rounded-xl p-6 flex items-start gap-4 border border-outline-variant/5">
+          <div className="w-12 h-12 bg-surface-container-lowest rounded-lg flex items-center justify-center text-primary shadow-sm">
+            <History size={24} />
+          </div>
+          <div>
+            <h4 className="font-bold text-on-surface">本地 TOTP 引擎</h4>
+            <p className="text-sm text-on-surface-variant">
+              验证码在本地 Base32 + TOTP 逻辑生成.
+            </p>
+          </div>
+        </div>
+        <div className="bg-surface-container-low rounded-xl p-6 flex items-start gap-4 border border-outline-variant/5">
+          <div className="w-12 h-12 bg-surface-container-lowest rounded-lg flex items-center justify-center text-on-surface-variant shadow-sm">
+            <ShieldCheck size={24} />
+          </div>
+          <div>
+            <h4 className="font-bold text-on-surface">安全提示</h4>
+            <p className="text-sm text-on-surface-variant">
+              不要把密钥或验证码分享给不可信的人。
+            </p>
+          </div>
         </div>
       </div>
     </section>
