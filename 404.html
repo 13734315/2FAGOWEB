@@ -151,7 +151,13 @@
         place-items: center;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
-        font-size: 14px;
+        color: var(--text);
+      }
+
+      .theme-icon svg {
+        width: 15px;
+        height: 15px;
+        display: block;
       }
 
       .theme-label {
@@ -161,7 +167,7 @@
 
       .workspace {
         display: grid;
-        grid-template-columns: minmax(340px, 470px) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
         gap: 18px;
         margin-top: 18px;
         align-items: start;
@@ -177,6 +183,7 @@
 
       .otp-panel {
         padding: 24px;
+        min-height: 100%;
       }
 
       .eyebrow {
@@ -267,7 +274,7 @@
 
       .input-panel h1 {
         margin: 0;
-        font-size: clamp(30px, 5vw, 48px);
+        font-size: clamp(28px, 4vw, 40px);
         line-height: 1;
         letter-spacing: -0.04em;
       }
@@ -324,14 +331,15 @@
         cursor: pointer;
       }
 
-      .meta-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 18px;
-      }
-
       .mini-card {
         padding: 20px;
+      }
+
+      .mini-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
       }
 
       .mini-card h2 {
@@ -359,6 +367,25 @@
         word-break: break-all;
       }
 
+      .copy-button {
+        flex-shrink: 0;
+        padding: 9px 12px;
+        border: 1px solid var(--line-strong);
+        border-radius: 12px;
+        background: var(--panel-soft);
+        color: var(--text);
+        font: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .copy-button:hover,
+      .action-button:hover,
+      .theme-toggle:hover {
+        filter: brightness(1.03);
+      }
+
       @media (max-width: 980px) {
         .workspace {
           grid-template-columns: 1fr;
@@ -379,7 +406,6 @@
         }
 
         .secret-form,
-        .meta-grid,
         .stats {
           grid-template-columns: 1fr;
         }
@@ -392,21 +418,21 @@
         <div class="brand">
           <div class="brand-mark">2F</div>
           <div class="brand-copy">
-            <strong>2FAGO / TOTP Viewer</strong>
-            <span>输入密钥或直接打开密钥地址，页面会实时显示验证码</span>
+            <strong>2FAGO / 动态验证码</strong>
+            <span>输入密钥或访问专属链接，实时查看当前动态验证码</span>
           </div>
         </div>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="切换深浅色">
-          <span class="theme-icon" id="theme-icon">☾</span>
-          <span class="theme-label" id="theme-label">深色</span>
+          <span class="theme-icon" id="theme-icon" aria-hidden="true"></span>
+          <span class="theme-label" id="theme-label">深色模式</span>
         </button>
       </header>
 
       <main class="workspace">
         <section class="panel otp-panel">
-          <p class="eyebrow">Current Verification Code</p>
+          <p class="eyebrow">Dynamic Verification Code</p>
           <h1 class="otp-code" id="otp-code">------</h1>
-          <p class="status" id="status-text">请在右侧输入密钥，或把密钥放在地址最后直接打开。</p>
+          <p class="status" id="status-text">请输入密钥，或直接访问专属链接以查看当前验证码。</p>
           <div class="progress" aria-hidden="true">
             <div class="progress-bar" id="progress-bar"></div>
           </div>
@@ -428,8 +454,8 @@
 
         <section class="side">
           <section class="panel input-panel">
-            <h1>输入密钥，直接跳转</h1>
-            <p>输入 Base32 密钥后，当前页面会打开这个密钥对应的地址，并立即显示新的验证码。</p>
+            <h1>输入密钥并打开专属链接</h1>
+            <p>输入 Base32 密钥后，系统会在当前页面打开对应链接，并立即显示该密钥的动态验证码。</p>
             <form class="secret-form" id="secret-form">
               <input
                 class="secret-input"
@@ -439,24 +465,25 @@
                 autocomplete="off"
                 autocapitalize="characters"
                 spellcheck="false"
-                placeholder="输入 Base32 密钥"
+                placeholder="请输入 Base32 格式密钥"
               />
-              <button class="action-button" type="submit">打开地址</button>
+              <button class="action-button" type="submit">打开链接</button>
             </form>
             <div class="path" id="target-url"></div>
           </section>
 
-          <section class="meta-grid">
-            <section class="panel mini-card">
+          <section class="panel mini-card">
+            <div class="mini-head">
               <h2>使用方式</h2>
-              <p>你也可以直接把密钥写进地址栏，页面会自动读取并生成验证码。</p>
-              <div class="path" id="example-url"></div>
-            </section>
+              <button class="copy-button" id="copy-example" type="button">复制链接</button>
+            </div>
+            <p>你也可以将密钥直接写入地址栏，页面会自动读取并生成验证码。</p>
+            <div class="path" id="example-url"></div>
+          </section>
 
-            <section class="panel mini-card">
-              <h2>安全提醒</h2>
-              <p>密钥在 URL 中时，拿到这个链接的人都能看到同样的验证码，请只在可信环境里使用。</p>
-            </section>
+          <section class="panel mini-card">
+            <h2>安全提示</h2>
+            <p>链接中包含密钥时，任何获得该链接的人都可以生成相同验证码。请仅在可信环境中使用，并避免对外分享。</p>
           </section>
         </section>
       </main>
@@ -479,6 +506,14 @@
       const themeToggleEl = document.getElementById("theme-toggle");
       const themeIconEl = document.getElementById("theme-icon");
       const themeLabelEl = document.getElementById("theme-label");
+      const copyExampleEl = document.getElementById("copy-example");
+
+      const THEME_ICONS = {
+        dark:
+          '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18.5 14.5A7 7 0 0 1 9.5 5.5a7.5 7.5 0 1 0 9 9Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+        light:
+          '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M21.5 12h-2.2M4.7 12H2.5M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6M18.7 18.7l-1.6-1.6M6.9 6.9 5.3 5.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+      };
 
       let currentSecret = "";
       let lastCounter = -1;
@@ -542,8 +577,8 @@
 
       function setTheme(theme) {
         document.documentElement.dataset.theme = theme;
-        themeIconEl.textContent = theme === "light" ? "☀" : "☾";
-        themeLabelEl.textContent = theme === "light" ? "浅色" : "深色";
+        themeIconEl.innerHTML = theme === "light" ? THEME_ICONS.light : THEME_ICONS.dark;
+        themeLabelEl.textContent = theme === "light" ? "浅色模式" : "深色模式";
         window.localStorage.setItem(THEME_STORAGE_KEY, theme);
       }
 
@@ -600,6 +635,23 @@
         targetUrlEl.textContent = buildSecretUrl(secretInputEl.value || currentSecret);
       }
 
+      async function copyText(text) {
+        if (window.navigator?.clipboard?.writeText) {
+          await window.navigator.clipboard.writeText(text);
+          return;
+        }
+
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "absolute";
+        textarea.style.left = "-9999px";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
       async function render() {
         currentSecret = normalizeSecret(extractSecret());
 
@@ -621,7 +673,7 @@
 
         if (!currentSecret) {
           codeEl.textContent = "------";
-          statusEl.textContent = "请在右侧输入密钥，或把密钥放在地址最后直接打开。";
+          statusEl.textContent = "请输入密钥，或直接访问专属链接以查看当前验证码。";
           statusEl.classList.remove("error");
           lastCounter = -1;
           return;
@@ -634,7 +686,7 @@
         try {
           const otp = await generateTotp(currentSecret, now);
           codeEl.textContent = formatCode(otp);
-          statusEl.textContent = "验证码正在本地生成，并会在当前周期结束后自动切换。";
+          statusEl.textContent = "验证码正在本地生成，并将在当前周期结束后自动刷新。";
           statusEl.classList.remove("error");
           lastCounter = counter;
         } catch (error) {
@@ -659,6 +711,21 @@
         }
 
         window.location.href = buildSecretUrl(normalized);
+      });
+
+      copyExampleEl.addEventListener("click", async () => {
+        try {
+          await copyText(exampleEl.textContent);
+          copyExampleEl.textContent = "已复制";
+          setTimeout(() => {
+            copyExampleEl.textContent = "复制链接";
+          }, 1400);
+        } catch (error) {
+          copyExampleEl.textContent = "复制失败";
+          setTimeout(() => {
+            copyExampleEl.textContent = "复制链接";
+          }, 1400);
+        }
       });
 
       themeToggleEl.addEventListener("click", () => {
