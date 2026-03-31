@@ -37,13 +37,6 @@ export default function MainContent({
   return (
     <section className="flex-1 space-y-8">
       <div className="bg-surface-container-lowest rounded-xl p-10 lg:p-16 flex flex-col items-center justify-center text-center space-y-10 shadow-sm border border-outline-variant/5">
-        <div className="space-y-2">
-          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold uppercase tracking-wider">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-            当前会话
-          </span>
-        </div>
-
         <div className="relative h-32 flex items-center justify-center">
           <AnimatePresence mode="wait">
             <motion.button
@@ -84,20 +77,20 @@ export default function MainContent({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg pt-4">
           <button
-            className="flex items-center justify-center gap-2 bg-primary text-on-primary py-4 px-6 rounded-xl font-semibold hover:bg-primary-dim transition-all active:scale-[0.98] shadow-sm group"
-            onClick={onCopyCode}
-            type="button"
-          >
-            <Copy size={20} className="group-hover:scale-110 transition-transform" />
-            {copyCodeLabel}
-          </button>
-          <button
             className="flex items-center justify-center gap-2 bg-secondary-container text-on-secondary-container py-4 px-6 rounded-xl font-semibold hover:bg-surface-container-high transition-all active:scale-[0.98] group"
             onClick={onCopyUrl}
             type="button"
           >
             <LinkIcon size={20} className="group-hover:rotate-12 transition-transform" />
             {copyUrlLabel}
+          </button>
+          <button
+            className="flex items-center justify-center gap-2 bg-primary text-on-primary py-4 px-6 rounded-xl font-semibold hover:bg-primary-dim transition-all active:scale-[0.98] shadow-sm group"
+            onClick={onCopyCode}
+            type="button"
+          >
+            <Copy size={20} className="group-hover:scale-110 transition-transform" />
+            {copyCodeLabel}
           </button>
         </div>
       </div>
@@ -121,7 +114,7 @@ export default function MainContent({
           <div>
             <h4 className="font-bold text-on-surface">安全提示</h4>
             <p className="text-sm text-on-surface-variant">
-              不要把密钥或验证码分享给不可信的人。页面会在浏览器本地生成验证码，不会把你的密钥提交到我们的服务器。
+              不要把密钥或验证码分享给不可信的人。
             </p>
           </div>
         </div>

@@ -7,6 +7,7 @@ const PERIOD = 30;
 const DIGITS = 6;
 const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 const THEME_STORAGE_KEY = '2fago-theme';
+const SECRET_PREFIX = '秘钥-';
 
 type Theme = 'light' | 'dark';
 type StatusTone = 'default' | 'error' | 'alert';
@@ -31,7 +32,11 @@ function extractSecret() {
 }
 
 function normalizeSecret(secret: string) {
-  return secret.toUpperCase().replace(/[\s-]+/g, '').replace(/=+$/g, '');
+  return secret
+    .replace(/^(秘钥-|密钥-)/i, '')
+    .toUpperCase()
+    .replace(/[\s-]+/g, '')
+    .replace(/=+$/g, '');
 }
 
 function getRoutingBase() {
@@ -42,7 +47,7 @@ function getRoutingBase() {
 function buildSecretUrl(secret: string) {
   const normalized = normalizeSecret(secret);
   const base = getRoutingBase();
-  return window.location.origin + (normalized ? base + encodeURIComponent(normalized) : base);
+  return window.location.origin + (normalized ? base + encodeURIComponent(`${SECRET_PREFIX}${normalized}`) : base);
 }
 
 function decodeBase32(secret: string) {
@@ -126,7 +131,7 @@ async function copyText(text: string) {
 export default function App() {
   const initialSecret = normalizeSecret(extractSecret());
   const [theme, setTheme] = useState<Theme>('light');
-  const [secretInput, setSecretInput] = useState(initialSecret);
+  const [secretInput, setSecretInput] = useState('');
   const [currentSecret, setCurrentSecret] = useState(initialSecret);
   const [currentOtp, setCurrentOtp] = useState('');
   const [displayCode, setDisplayCode] = useState('------');
@@ -167,7 +172,7 @@ export default function App() {
     const handlePopState = () => {
       const nextSecret = normalizeSecret(extractSecret());
       setCurrentSecret(nextSecret);
-      setSecretInput(nextSecret);
+      setSecretInput('');
       setNow(Date.now());
     };
 
@@ -203,7 +208,7 @@ export default function App() {
         }
         setCurrentOtp(otp);
         setDisplayCode(formatCode(otp));
-        setStatusText('验证码正在本地生成，并将在当前周期结束后自动刷新。');
+        setStatusText(`${currentSecret.slice(0, 5)}-验证码正在本地生成，并将在当前周期结束后自动刷新。`);
         setStatusTone('default');
       })
       .catch((error: Error) => {
@@ -265,7 +270,7 @@ export default function App() {
     const nextUrl = buildSecretUrl(normalized);
     window.history.pushState({}, '', nextUrl);
     setCurrentSecret(normalized);
-    setSecretInput(normalized);
+    setSecretInput('');
     setNow(Date.now());
   }
 

@@ -23,7 +23,7 @@ export default function Header({theme, onToggleTheme}: HeaderProps) {
               2FAGO
             </h1>
             <p className="text-[10px] uppercase tracking-widest text-on-surface-variant font-medium">
-              动态验证码
+              Authenticator Pro
             </p>
           </div>
         </div>
