@@ -438,12 +438,10 @@
               <strong id="seconds-left">--s</strong>
             </div>
             <button class="stat stat-button" id="copy-current-url" type="button">
-              <span>复制当前链接</span>
-              <strong id="copy-current-url-label">当前链接</strong>
+              <strong id="copy-current-url-label">复制链接</strong>
             </button>
             <button class="stat stat-button" id="copy-current-code" type="button">
-              <span>复制验证码</span>
-              <strong id="copy-current-code-label">当前验证码</strong>
+              <strong id="copy-current-code-label">复制验证码</strong>
             </button>
           </div>
         </section>
@@ -652,7 +650,7 @@
       function flashLabel(element, nextText) {
         element.textContent = nextText;
         setTimeout(() => {
-          element.textContent = element.id === "copy-current-url-label" ? "当前链接" : "当前验证码";
+          element.textContent = element.id === "copy-current-url-label" ? "复制链接" : "复制验证码";
         }, 1400);
       }
 
