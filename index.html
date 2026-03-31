@@ -659,7 +659,7 @@
         const currentSecond = Math.floor(now / 1000);
         const counter = Math.floor(currentSecond / PERIOD);
         const secondsLeft = PERIOD - (currentSecond % PERIOD);
-        const progress = ((PERIOD - secondsLeft) / PERIOD) * 100;
+        const progress = (secondsLeft / PERIOD) * 100;
 
         secondsEl.textContent = secondsLeft + "s";
         progressEl.style.width = progress + "%";
