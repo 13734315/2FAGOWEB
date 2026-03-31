@@ -1,5 +1,4 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {HelpCircle, Key, ShieldCheck} from 'lucide-react';
 import Header from './components/Header';
 import MainContent from './components/MainContent';
 import Sidebar from './components/Sidebar';
@@ -333,34 +332,6 @@ export default function App() {
           onSubmit={handleSecretSubmit}
         />
       </main>
-
-      <nav
-        className={`lg:hidden fixed bottom-0 left-0 w-full backdrop-blur-2xl flex justify-around items-center px-4 pb-6 pt-3 z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] border-t border-outline-variant/10 ${
-          theme === 'dark' ? 'bg-surface-container-lowest/90' : 'bg-white/90'
-        }`}
-      >
-        <a
-          className="flex flex-col items-center justify-center text-primary bg-secondary-container/50 rounded-xl px-4 py-2 transition-transform scale-90 active:scale-100"
-          href="#"
-        >
-          <ShieldCheck size={24} fill="currentColor" fillOpacity={0.2} />
-          <span className="text-[10px] font-bold uppercase tracking-wider mt-1">Verify</span>
-        </a>
-        <a
-          className="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2"
-          href="#secret-panel"
-        >
-          <Key size={24} />
-          <span className="text-[10px] font-bold uppercase tracking-wider mt-1">Keys</span>
-        </a>
-        <a
-          className="flex flex-col items-center justify-center text-on-surface-variant px-4 py-2"
-          href="#guide-panel"
-        >
-          <HelpCircle size={24} />
-          <span className="text-[10px] font-bold uppercase tracking-wider mt-1">Guide</span>
-        </a>
-      </nav>
     </div>
   );
 }

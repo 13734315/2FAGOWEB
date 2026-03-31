@@ -1,5 +1,5 @@
 import React from 'react';
-import {ExternalLink, Globe, ShieldCheck} from 'lucide-react';
+import {ExternalLink, Globe} from 'lucide-react';
 
 type SidebarProps = {
   secretInput: string;
@@ -95,16 +95,6 @@ export default function Sidebar({
             </code>
           </div>
         </div>
-      </div>
-
-      <div className="bg-secondary-container/40 rounded-xl p-6 border border-primary/5">
-        <div className="flex items-center gap-2 mb-3">
-          <ShieldCheck size={20} className="text-primary" fill="currentColor" fillOpacity={0.1} />
-          <h3 className="font-headline font-bold text-on-secondary-container">安全提示</h3>
-        </div>
-        <p className="text-xs text-on-secondary-container/80 leading-relaxed italic">
-          不要把密钥或验证码分享给不可信的人。我们的验证码生成过程仍然完全在本地浏览器中完成。
-        </p>
       </div>
     </aside>
   );

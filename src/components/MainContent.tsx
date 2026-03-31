@@ -1,5 +1,5 @@
 import React from 'react';
-import {Copy, History, Laptop, Link as LinkIcon} from 'lucide-react';
+import {Copy, History, Link as LinkIcon, ShieldCheck} from 'lucide-react';
 import {AnimatePresence, motion} from 'motion/react';
 
 type MainContentProps = {
@@ -119,12 +119,12 @@ export default function MainContent({
         </div>
         <div className="bg-surface-container-low rounded-xl p-6 flex items-start gap-4 border border-outline-variant/5">
           <div className="w-12 h-12 bg-surface-container-lowest rounded-lg flex items-center justify-center text-on-surface-variant shadow-sm">
-            <Laptop size={24} />
+            <ShieldCheck size={24} />
           </div>
           <div>
-            <h4 className="font-bold text-on-surface">Direct Link Access</h4>
+            <h4 className="font-bold text-on-surface">安全提示</h4>
             <p className="text-sm text-on-surface-variant">
-              输入密钥后会生成你的专属链接，后续直接访问链接就能继续查看当前验证码。
+              不要把密钥或验证码分享给不可信的人。页面会在浏览器本地生成验证码，不会把你的密钥提交到我们的服务器。
             </p>
           </div>
         </div>

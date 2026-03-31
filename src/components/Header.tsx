@@ -1,5 +1,5 @@
 import React from 'react';
-import {Menu, Moon, Settings, ShieldCheck, Sun} from 'lucide-react';
+import {Moon, ShieldCheck, Sun} from 'lucide-react';
 
 type HeaderProps = {
   theme: 'light' | 'dark';
@@ -28,25 +28,7 @@ export default function Header({theme, onToggleTheme}: HeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <nav className="hidden md:flex items-center gap-6 mr-6">
-            <a className="text-primary font-semibold text-sm" href="#">
-              Generator
-            </a>
-            <a
-              className="text-on-surface-variant hover:text-primary transition-colors text-sm"
-              href="#secret-panel"
-            >
-              Security Keys
-            </a>
-            <a
-              className="text-on-surface-variant hover:text-primary transition-colors text-sm"
-              href="#guide-panel"
-            >
-              Guide
-            </a>
-          </nav>
-
+        <div className="flex items-center">
           <button
             className="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant active:scale-95"
             onClick={onToggleTheme}
@@ -54,12 +36,6 @@ export default function Header({theme, onToggleTheme}: HeaderProps) {
             aria-label={theme === 'dark' ? '切换到浅色模式' : '切换到深色模式'}
           >
             {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-          <button className="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant active:scale-95" type="button" aria-label="设置">
-            <Settings size={20} />
-          </button>
-          <button className="md:hidden p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant active:scale-95" type="button" aria-label="菜单">
-            <Menu size={20} />
           </button>
         </div>
       </div>
