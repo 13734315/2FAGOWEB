@@ -202,6 +202,7 @@
         font-weight: 800;
         font-variant-numeric: tabular-nums;
         text-shadow: 0 0 28px rgba(134, 239, 190, 0.16);
+        cursor: pointer;
       }
 
       .status {
@@ -243,6 +244,18 @@
         border: 1px solid var(--line);
         border-radius: 20px;
         background: var(--panel-soft);
+      }
+
+      .stat-button {
+        width: 100%;
+        text-align: left;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+
+      .stat-button:hover {
+        filter: brightness(1.04);
       }
 
       .stat span {
@@ -441,20 +454,20 @@
               <span>剩余时间</span>
               <strong id="seconds-left">--s</strong>
             </div>
-            <div class="stat">
-              <span>周期</span>
-              <strong>30s</strong>
-            </div>
-            <div class="stat">
-              <span>算法</span>
-              <strong>SHA-1</strong>
-            </div>
+            <button class="stat stat-button" id="copy-current-url" type="button">
+              <span>复制当前链接</span>
+              <strong id="copy-current-url-label">点击复制</strong>
+            </button>
+            <button class="stat stat-button" id="copy-current-code" type="button">
+              <span>复制验证码</span>
+              <strong id="copy-current-code-label">点击复制</strong>
+            </button>
           </div>
         </section>
 
         <section class="side">
           <section class="panel input-panel">
-            <h1>输入密钥并打开专属链接</h1>
+            <h1>输入密钥打开</h1>
             <p>输入 Base32 密钥后，系统会在当前页面打开对应链接，并立即显示该密钥的动态验证码。</p>
             <form class="secret-form" id="secret-form">
               <input
@@ -507,6 +520,10 @@
       const themeIconEl = document.getElementById("theme-icon");
       const themeLabelEl = document.getElementById("theme-label");
       const copyExampleEl = document.getElementById("copy-example");
+      const copyCurrentUrlEl = document.getElementById("copy-current-url");
+      const copyCurrentUrlLabelEl = document.getElementById("copy-current-url-label");
+      const copyCurrentCodeEl = document.getElementById("copy-current-code");
+      const copyCurrentCodeLabelEl = document.getElementById("copy-current-code-label");
 
       const THEME_ICONS = {
         dark:
@@ -516,6 +533,7 @@
       };
 
       let currentSecret = "";
+      let currentOtp = "";
       let lastCounter = -1;
 
       function extractSecret() {
@@ -652,6 +670,13 @@
         document.body.removeChild(textarea);
       }
 
+      function flashLabel(element, nextText) {
+        element.textContent = nextText;
+        setTimeout(() => {
+          element.textContent = "点击复制";
+        }, 1400);
+      }
+
       async function render() {
         currentSecret = normalizeSecret(extractSecret());
 
@@ -673,6 +698,7 @@
 
         if (!currentSecret) {
           codeEl.textContent = "------";
+          currentOtp = "";
           statusEl.textContent = "请输入密钥，或直接访问专属链接以查看当前验证码。";
           statusEl.classList.remove("error");
           lastCounter = -1;
@@ -685,12 +711,14 @@
 
         try {
           const otp = await generateTotp(currentSecret, now);
+          currentOtp = otp;
           codeEl.textContent = formatCode(otp);
           statusEl.textContent = "验证码正在本地生成，并将在当前周期结束后自动刷新。";
           statusEl.classList.remove("error");
           lastCounter = counter;
         } catch (error) {
           codeEl.textContent = "ERROR";
+          currentOtp = "";
           statusEl.textContent = error.message || "验证码生成失败";
           statusEl.classList.add("error");
           lastCounter = -1;
@@ -725,6 +753,44 @@
           setTimeout(() => {
             copyExampleEl.textContent = "复制链接";
           }, 1400);
+        }
+      });
+
+      codeEl.addEventListener("click", async () => {
+        if (!currentOtp) {
+          return;
+        }
+
+        try {
+          await copyText(currentOtp);
+          statusEl.textContent = "验证码已复制到剪贴板。";
+          statusEl.classList.remove("error");
+        } catch (error) {
+          statusEl.textContent = "复制验证码失败，请稍后重试。";
+          statusEl.classList.add("error");
+        }
+      });
+
+      copyCurrentUrlEl.addEventListener("click", async () => {
+        try {
+          await copyText(window.location.href);
+          flashLabel(copyCurrentUrlLabelEl, "已复制");
+        } catch (error) {
+          flashLabel(copyCurrentUrlLabelEl, "复制失败");
+        }
+      });
+
+      copyCurrentCodeEl.addEventListener("click", async () => {
+        if (!currentOtp) {
+          flashLabel(copyCurrentCodeLabelEl, "暂无验证码");
+          return;
+        }
+
+        try {
+          await copyText(currentOtp);
+          flashLabel(copyCurrentCodeLabelEl, "已复制");
+        } catch (error) {
+          flashLabel(copyCurrentCodeLabelEl, "复制失败");
         }
       });
 
