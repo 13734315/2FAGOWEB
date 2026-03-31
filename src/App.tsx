@@ -44,10 +44,18 @@ function getRoutingBase() {
   return parts[0]?.toLowerCase() === '2fago' ? '/2fago/' : '/';
 }
 
-function buildSecretUrl(secret: string) {
-  const normalized = normalizeSecret(secret);
+function buildDisplaySecretUrl(secret: string) {
   const base = getRoutingBase();
-  return window.location.origin + (normalized ? base + encodeURIComponent(normalized) : base);
+  return window.location.origin + (secret ? base + secret : base);
+}
+
+function buildHistorySecretUrl(secret: string) {
+  const base = getRoutingBase();
+  return secret ? base + secret : base;
+}
+
+function isValidSecret(secret: string) {
+  return normalizeSecret(secret).length >= 6;
 }
 
 function decodeBase32(secret: string) {
@@ -129,10 +137,10 @@ async function copyText(text: string) {
 }
 
 export default function App() {
-  const initialSecret = normalizeSecret(extractSecret());
+  const initialRawSecret = extractSecret();
   const [theme, setTheme] = useState<Theme>('light');
   const [secretInput, setSecretInput] = useState('');
-  const [currentSecret, setCurrentSecret] = useState(initialSecret);
+  const [currentRawSecret, setCurrentRawSecret] = useState(initialRawSecret);
   const [currentOtp, setCurrentOtp] = useState('');
   const [displayCode, setDisplayCode] = useState('------');
   const [statusText, setStatusText] = useState(
@@ -149,8 +157,9 @@ export default function App() {
   const counter = Math.floor(currentSecond / PERIOD);
   const secondsLeft = PERIOD - (currentSecond % PERIOD);
   const progress = (secondsLeft / PERIOD) * 100;
-  const currentUrl = buildSecretUrl(secretInput || currentSecret);
-  const exampleUrl = buildSecretUrl('KKKKKKKKKKKK');
+  const normalizedCurrentSecret = normalizeSecret(currentRawSecret);
+  const currentUrl = buildDisplaySecretUrl(secretInput || currentRawSecret);
+  const exampleUrl = buildDisplaySecretUrl('KKKKKKKKKKKK');
 
   useEffect(() => {
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -170,8 +179,8 @@ export default function App() {
 
   useEffect(() => {
     const handlePopState = () => {
-      const nextSecret = normalizeSecret(extractSecret());
-      setCurrentSecret(nextSecret);
+      const nextRawSecret = extractSecret();
+      setCurrentRawSecret(nextRawSecret);
       setSecretInput('');
       setNow(Date.now());
     };
@@ -191,7 +200,7 @@ export default function App() {
   useEffect(() => {
     let cancelled = false;
 
-    if (!currentSecret) {
+    if (!currentRawSecret) {
       setDisplayCode('------');
       setCurrentOtp('');
       setStatusText('请输入密钥，或直接访问专属链接以查看当前验证码。');
@@ -201,14 +210,24 @@ export default function App() {
       };
     }
 
-    generateTotp(currentSecret, now)
+    if (!isValidSecret(currentRawSecret)) {
+      setDisplayCode('------');
+      setCurrentOtp('');
+      setStatusText('密钥值无效');
+      setStatusTone('error');
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    generateTotp(normalizedCurrentSecret, now)
       .then((otp) => {
         if (cancelled) {
           return;
         }
         setCurrentOtp(otp);
         setDisplayCode(formatCode(otp));
-        setStatusText(`${currentSecret.slice(0, 5)}-验证码正在本地生成，并将在当前周期结束后自动刷新。`);
+        setStatusText(`${normalizedCurrentSecret.slice(0, 5)}-验证码正在本地生成，并将在当前周期结束后自动刷新。`);
         setStatusTone('default');
       })
       .catch((error: Error) => {
@@ -224,7 +243,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [currentSecret, counter]);
+  }, [currentRawSecret, normalizedCurrentSecret, counter, now]);
 
   useEffect(() => {
     return () => {
@@ -259,18 +278,9 @@ export default function App() {
 
   function handleSecretSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const normalized = normalizeSecret(secretInput);
-
-    if (!normalized) {
-      setStatusText('请先输入 Base32 密钥。');
-      setStatusTone('error');
-      return;
-    }
-
-    const nextUrl = buildSecretUrl(normalized);
+    const nextUrl = buildHistorySecretUrl(secretInput);
     window.history.pushState({}, '', nextUrl);
-    setCurrentSecret(normalized);
-    setSecretInput('');
+    setCurrentRawSecret(secretInput);
     setNow(Date.now());
   }
 
