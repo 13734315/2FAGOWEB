@@ -7,6 +7,7 @@ const PERIOD = 30;
 const DIGITS = 6;
 const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 const THEME_STORAGE_KEY = '2fago-theme';
+const STATUS_ALERT_DURATION_MS = 3000;
 
 type Theme = 'light' | 'dark';
 type StatusTone = 'default' | 'error' | 'alert';
@@ -56,6 +57,10 @@ function buildHistorySecretUrl(secret: string) {
 
 function isValidSecret(secret: string) {
   return normalizeSecret(secret).length >= 6;
+}
+
+function getSuccessStatusText(secret: string) {
+  return `${secret.slice(0, 5)}-验证码正在本地生成，并将在当前周期结束后自动刷新。`;
 }
 
 function decodeBase32(secret: string) {
@@ -152,6 +157,7 @@ export default function App() {
   const [now, setNow] = useState(Date.now());
   const copyCodeResetRef = useRef<number | null>(null);
   const copyUrlResetRef = useRef<number | null>(null);
+  const statusResetRef = useRef<number | null>(null);
 
   const currentSecond = Math.floor(now / 1000);
   const counter = Math.floor(currentSecond / PERIOD);
@@ -227,7 +233,7 @@ export default function App() {
         }
         setCurrentOtp(otp);
         setDisplayCode(formatCode(otp));
-        setStatusText(`${normalizedCurrentSecret.slice(0, 5)}-验证码正在本地生成，并将在当前周期结束后自动刷新。`);
+        setStatusText(getSuccessStatusText(normalizedCurrentSecret));
         setStatusTone('default');
       })
       .catch((error: Error) => {
@@ -243,7 +249,7 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [currentRawSecret, normalizedCurrentSecret, counter, now]);
+  }, [currentRawSecret, normalizedCurrentSecret, counter]);
 
   useEffect(() => {
     return () => {
@@ -252,6 +258,9 @@ export default function App() {
       }
       if (copyUrlResetRef.current) {
         window.clearTimeout(copyUrlResetRef.current);
+      }
+      if (statusResetRef.current) {
+        window.clearTimeout(statusResetRef.current);
       }
     };
   }, []);
@@ -316,6 +325,25 @@ export default function App() {
       await copyText(currentOtp);
       setStatusText('验证码已复制到剪贴板。');
       setStatusTone('alert');
+      if (statusResetRef.current) {
+        window.clearTimeout(statusResetRef.current);
+      }
+      statusResetRef.current = window.setTimeout(() => {
+        if (!currentRawSecret) {
+          setStatusText('请输入密钥，或直接访问专属链接以查看当前验证码。');
+          setStatusTone('default');
+          return;
+        }
+
+        if (!isValidSecret(currentRawSecret)) {
+          setStatusText('密钥值无效');
+          setStatusTone('error');
+          return;
+        }
+
+        setStatusText(getSuccessStatusText(normalizedCurrentSecret));
+        setStatusTone('default');
+      }, STATUS_ALERT_DURATION_MS);
     } catch {
       setStatusText('复制验证码失败，请稍后重试。');
       setStatusTone('error');
