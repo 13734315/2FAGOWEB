@@ -7,7 +7,6 @@ const PERIOD = 30;
 const DIGITS = 6;
 const BASE32_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 const THEME_STORAGE_KEY = '2fago-theme';
-const SECRET_PREFIX = '秘钥-';
 
 type Theme = 'light' | 'dark';
 type StatusTone = 'default' | 'error' | 'alert';
@@ -36,7 +35,8 @@ function normalizeSecret(secret: string) {
     .replace(/^(秘钥-|密钥-)/i, '')
     .toUpperCase()
     .replace(/[\s-]+/g, '')
-    .replace(/=+$/g, '');
+    .replace(/=+$/g, '')
+    .replace(/[^A-Z2-7]/g, '');
 }
 
 function getRoutingBase() {
@@ -47,7 +47,7 @@ function getRoutingBase() {
 function buildSecretUrl(secret: string) {
   const normalized = normalizeSecret(secret);
   const base = getRoutingBase();
-  return window.location.origin + (normalized ? base + encodeURIComponent(`${SECRET_PREFIX}${normalized}`) : base);
+  return window.location.origin + (normalized ? base + encodeURIComponent(normalized) : base);
 }
 
 function decodeBase32(secret: string) {

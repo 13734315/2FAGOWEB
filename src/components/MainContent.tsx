@@ -103,7 +103,7 @@ export default function MainContent({
           <div>
             <h4 className="font-bold text-on-surface">本地 TOTP 引擎</h4>
             <p className="text-sm text-on-surface-variant">
-              验证码完全在浏览器本地生成，沿用我们原来的 Base32 + TOTP 逻辑。
+              验证码在本地 Base32 + TOTP 逻辑生成.
             </p>
           </div>
         </div>

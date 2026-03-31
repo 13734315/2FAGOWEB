@@ -74,7 +74,7 @@ export default function Sidebar({
               3
             </span>
             <p className="text-xs text-on-surface-variant leading-relaxed">
-              点击复制验证码或复制链接，就可以把它用到你的目标系统里。
+              收藏到浏览器可长期使用。
             </p>
           </li>
         </ul>
