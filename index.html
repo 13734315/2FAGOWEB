@@ -251,8 +251,11 @@
       }
 
       .stat-button {
+        display: grid;
+        place-items: center;
         width: 100%;
-        text-align: left;
+        min-height: 100%;
+        text-align: center;
         color: inherit;
         font: inherit;
         cursor: pointer;
@@ -273,6 +276,11 @@
         display: block;
         font-size: 28px;
         font-weight: 700;
+      }
+
+      .stat-button strong {
+        margin: 0;
+        text-align: center;
       }
 
       .side {
@@ -665,7 +673,7 @@
 
         secondsEl.textContent = secondsLeft + "s";
         progressEl.style.width = progress + "%";
-        exampleEl.textContent = buildSecretUrl("DEMO-FAKE-KEY-ONLY");
+        exampleEl.textContent = buildSecretUrl("KKKKKKKKKKKK");
 
         if (document.activeElement !== secretInputEl) {
           secretInputEl.value = currentSecret;
