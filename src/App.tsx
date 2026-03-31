@@ -1,5 +1,6 @@
 import React, {useEffect, useRef, useState} from 'react';
 import Header from './components/Header';
+import InfoCards from './components/InfoCards';
 import MainContent from './components/MainContent';
 import Sidebar from './components/Sidebar';
 
@@ -354,26 +355,35 @@ export default function App() {
     <div className="min-h-screen bg-background text-on-surface">
       <Header theme={theme} onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')} />
 
-      <main className="pt-24 pb-20 px-6 max-w-7xl mx-auto lg:flex gap-10 min-h-screen">
-        <MainContent
-          code={displayCode}
-          statusText={statusText}
-          statusTone={statusTone}
-          timeLeft={secondsLeft}
-          progress={progress}
-          copyCodeLabel={copyCodeLabel}
-          copyUrlLabel={copyUrlLabel}
-          onCopyCode={handleCodeCopy}
-          onCopyUrl={handleUrlCopy}
-          onCodeClick={handleCodeClick}
-        />
-        <Sidebar
-          secretInput={secretInput}
-          currentUrl={currentUrl}
-          exampleUrl={exampleUrl}
-          onSecretChange={setSecretInput}
-          onSubmit={handleSecretSubmit}
-        />
+      <main className="pt-24 pb-20 px-6 max-w-7xl mx-auto min-h-screen">
+        <div className="flex flex-col gap-10 lg:flex-row">
+          <div className="order-1 flex-1">
+            <MainContent
+              code={displayCode}
+              statusText={statusText}
+              statusTone={statusTone}
+              timeLeft={secondsLeft}
+              progress={progress}
+              copyCodeLabel={copyCodeLabel}
+              copyUrlLabel={copyUrlLabel}
+              onCopyCode={handleCodeCopy}
+              onCopyUrl={handleUrlCopy}
+              onCodeClick={handleCodeClick}
+            />
+          </div>
+          <div className="order-2 lg:order-none">
+            <Sidebar
+              secretInput={secretInput}
+              currentUrl={currentUrl}
+              exampleUrl={exampleUrl}
+              onSecretChange={setSecretInput}
+              onSubmit={handleSecretSubmit}
+            />
+          </div>
+        </div>
+        <div className="mt-10">
+          <InfoCards />
+        </div>
       </main>
     </div>
   );
