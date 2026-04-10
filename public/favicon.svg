@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="2FAGO favicon">
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="#006592" />
+  <circle cx="25.5" cy="38.5" r="11.5" fill="#fff" />
+  <circle cx="42" cy="22" r="6.75" fill="#fff" />
+  <rect
+    x="22.8"
+    y="26.5"
+    width="22.5"
+    height="8"
+    rx="4"
+    transform="rotate(-45 34.05 30.5)"
+    fill="#fff"
+  />
+</svg>
